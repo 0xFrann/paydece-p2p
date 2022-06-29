@@ -6,7 +6,7 @@ export type TLocation = {
   address: string;
 };
 
-export type TShop = {
+export type TPoint = {
   id: string;
   name: string;
   ownerId?: string;

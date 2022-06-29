@@ -5,12 +5,25 @@ import { useConnect } from "wagmi";
 interface Props {
   open: boolean;
   setOpen: (showWalletOptions: boolean) => void;
+  onConnect: (address: string) => void;
 }
 
 export default function WalletOptionsModal(props: Props) {
-  const { open, setOpen } = props;
-  const { connect, connectors, error, isConnecting, pendingConnector } =
-    useConnect();
+  const { open, setOpen, onConnect } = props;
+  const {
+    connect,
+    connectors,
+    error,
+    isConnecting,
+    pendingConnector,
+    isConnected,
+    data
+  } = useConnect();
+
+  useEffect(() => {
+    if (open && isConnected) onConnect(data?.account);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isConnected]);
 
   return open ? (
     <>

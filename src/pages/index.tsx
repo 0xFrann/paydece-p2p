@@ -18,10 +18,15 @@ export default function Home() {
   const [isModalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
-    if (account) {
+    if (account && isModalOpen) {
       setModalOpen(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account]);
+
+  const handleOnConnect = (address: string) => {
+    alert(address);
+  };
 
   return (
     <div>
@@ -58,10 +63,14 @@ export default function Home() {
               <button onClick={() => setModalOpen((prev) => !prev)}>
                 Connect Wallet
               </button>
-              <WalletOptionsModal open={isModalOpen} setOpen={setModalOpen} />
             </div>
           </>
         )}
+        <WalletOptionsModal
+          open={isModalOpen}
+          setOpen={setModalOpen}
+          onConnect={handleOnConnect}
+        />
 
         <Map />
       </main>

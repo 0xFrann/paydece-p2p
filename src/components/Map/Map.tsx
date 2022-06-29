@@ -7,7 +7,7 @@ import RadiusIcon from "../../assets/radius-mark.svg";
 import CloseIcon from "../../assets/close-icon.svg";
 import WhatsAppIcon from "../../assets/whatsapp-icon.svg";
 import LinkIcon from "../../assets/link-icon.svg";
-import { TShop } from "../../types";
+import { TPoint } from "../../types";
 import {
   MarkerStyle,
   PopupContentStyle,
@@ -18,7 +18,7 @@ import {
   LinksStyle,
   WhatsAppIconStyle,
   LinkIconStyle,
-  ShopPointStyle,
+  PointPointStyle,
   UserPointStyle
 } from "./styles";
 import { MAPBOX_GL_TOKEN } from "../../constants";
@@ -26,7 +26,7 @@ import { MAPBOX_GL_TOKEN } from "../../constants";
 interface IMapProps {
   lat?: number;
   lng?: number;
-  data?: TShop[];
+  data?: TPoint[];
 }
 
 const DEFAULT_PROPS: IMapProps = {
@@ -53,22 +53,22 @@ const MapComponent = ({
   lng = DEFAULT_PROPS.lng,
   data = DEFAULT_PROPS.data
 }: IMapProps): React.ReactElement => {
-  const [selectedShop, setSelectedShop] = useState<TShop>(null);
+  const [selectedPoint, setSelectedPoint] = useState<TPoint>(null);
 
   const DATA_POINTS = useMemo(() => {
     return data
-      ? data.map((shop: TShop) => {
+      ? data.map((point: TPoint) => {
           const { latitude: lat, longitude: lng } = randomCirclePoint(
             {
-              latitude: shop.location.latLng.lat,
-              longitude: shop.location.latLng.lng
+              latitude: point.location.latLng.lat,
+              longitude: point.location.latLng.lng
             },
             100
           );
           return {
-            ...shop,
+            ...point,
             location: {
-              ...shop.location,
+              ...point.location,
               latLng: { lat, lng }
             }
           };
@@ -76,12 +76,12 @@ const MapComponent = ({
       : [];
   }, [data]);
 
-  const handleClickMarker = (shop: TShop): void => {
-    setSelectedShop(shop);
+  const handleClickMarker = (point: TPoint): void => {
+    setSelectedPoint(point);
   };
 
   const handleClosePopup = (): void => {
-    setSelectedShop(null);
+    setSelectedPoint(null);
   };
 
   return (
@@ -97,29 +97,29 @@ const MapComponent = ({
         height: "100%",
         width: "100%"
       }}
-      {...(selectedShop && {
-        longitude: selectedShop?.location.latLng.lng,
-        latitude: selectedShop?.location.latLng.lat
+      {...(selectedPoint && {
+        longitude: selectedPoint?.location.latLng.lng,
+        latitude: selectedPoint?.location.latLng.lat
       })}
     >
       <>
         {DATA_POINTS?.length &&
-          DATA_POINTS.map((shop) => {
+          DATA_POINTS.map((point) => {
             return (
               <Marker
-                longitude={shop?.location.latLng?.lng}
-                latitude={shop?.location.latLng?.lat}
-                key={shop?.id}
+                longitude={point?.location.latLng?.lng}
+                latitude={point?.location.latLng?.lat}
+                key={point?.id}
                 onClick={(e) => {
                   e.originalEvent.stopPropagation();
-                  handleClickMarker(shop);
+                  handleClickMarker(point);
                 }}
               >
                 <div className={MarkerStyle}>
                   <RadiusIcon
                     width={75}
                     height={75}
-                    className={ShopPointStyle}
+                    className={PointPointStyle}
                   />
                 </div>
               </Marker>
@@ -128,10 +128,10 @@ const MapComponent = ({
         <Marker longitude={lng} latitude={lat}>
           <PointIcon width={24} height={24} className={UserPointStyle} />
         </Marker>
-        {selectedShop && (
+        {selectedPoint && (
           <Popup
-            longitude={selectedShop?.location.latLng.lng}
-            latitude={selectedShop?.location.latLng.lat}
+            longitude={selectedPoint?.location.latLng.lng}
+            latitude={selectedPoint?.location.latLng.lat}
             anchor="bottom"
             offset={[7, -20]}
             className={PopupContentStyle}
@@ -145,20 +145,22 @@ const MapComponent = ({
               onClick={handleClosePopup}
               className={PopupCloseIconStyle}
             />
-            <span className={PopupTitleStyle}>{selectedShop?.name}</span>
-            <span className={PopupSubTitleStyle}>{selectedShop?.category}</span>
+            <span className={PopupTitleStyle}>{selectedPoint?.name}</span>
+            <span className={PopupSubTitleStyle}>
+              {selectedPoint?.category}
+            </span>
             <a
-              href={`https://maps.google.com/?q=${selectedShop?.location?.latLng.lat},${selectedShop?.location?.latLng.lng}`}
+              href={`https://maps.google.com/?q=${selectedPoint?.location?.latLng.lat},${selectedPoint?.location?.latLng.lng}`}
               target="_blank"
               rel="noreferrer"
               className={AddressStyle}
             >
-              {selectedShop?.location?.address}
+              {selectedPoint?.location?.address}
             </a>
             <span className={LinksStyle}>
-              {selectedShop?.contact?.whatsapp && (
+              {selectedPoint?.contact?.whatsapp && (
                 <a
-                  href={`https://wa.me/54${selectedShop.contact.whatsapp}`}
+                  href={`https://wa.me/54${selectedPoint.contact.whatsapp}`}
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -169,12 +171,12 @@ const MapComponent = ({
                   />
                 </a>
               )}
-              {selectedShop?.contact?.link && (
+              {selectedPoint?.contact?.link && (
                 <a
                   href={
-                    selectedShop.contact.link.startsWith("http")
-                      ? selectedShop.contact.link
-                      : `//${selectedShop.contact.link}`
+                    selectedPoint.contact.link.startsWith("http")
+                      ? selectedPoint.contact.link
+                      : `//${selectedPoint.contact.link}`
                   }
                   target="_blank"
                   rel="noreferrer"
