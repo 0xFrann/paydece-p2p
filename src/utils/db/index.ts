@@ -1,5 +1,5 @@
-import admin from "firebase-admin";
-const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+import admin from 'firebase-admin'
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
 
 if (!admin.apps.length) {
   try {
@@ -7,13 +7,13 @@ if (!admin.apps.length) {
       credential: admin.credential.cert({
         projectId: serviceAccount.project_id,
         clientEmail: serviceAccount.client_email,
-        privateKey: serviceAccount.private_key
+        privateKey: serviceAccount.private_key,
       }),
-      databaseURL: `https://${serviceAccount.project_id}.firebaseio.com`
-    });
-    console.log("Firebase admin initialized");
+      databaseURL: `https://${serviceAccount.project_id}.firebaseio.com`,
+    })
+    console.log('Firebase admin initialized')
   } catch (error) {
-    console.log("Firebase admin initialization error", error.stack);
+    console.log('Firebase admin initialization error', error.stack)
   }
 }
-export default admin.firestore();
+export default admin.firestore()

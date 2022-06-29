@@ -1,32 +1,26 @@
-import Head from "next/head";
-import { useEffect, useState } from "react";
-import {
-  useAccount,
-  useConnect,
-  useDisconnect,
-  useEnsAvatar,
-  useEnsName
-} from "wagmi";
-import WalletOptionsModal from "../components/WalletOptionsModal/WalletOptionsModal";
-import Map from "../components/Map/Map";
+import Head from 'next/head'
+import { useEffect, useState } from 'react'
+import { useAccount, useDisconnect, useEnsAvatar, useEnsName } from 'wagmi'
+import Map from '../components/Map/Map'
+import WalletOptionsModal from '../components/WalletOptionsModal/WalletOptionsModal'
 
 export default function Home() {
-  const { data: account } = useAccount();
-  const { data: ensAvatar } = useEnsAvatar({ addressOrName: account?.address });
-  const { data: ensName } = useEnsName({ address: account?.address });
-  const { disconnect } = useDisconnect();
-  const [isModalOpen, setModalOpen] = useState(false);
+  const { data: account } = useAccount()
+  const { data: ensAvatar } = useEnsAvatar({ addressOrName: account?.address })
+  const { data: ensName } = useEnsName({ address: account?.address })
+  const { disconnect } = useDisconnect()
+  const [isModalOpen, setModalOpen] = useState(false)
 
   useEffect(() => {
     if (account && isModalOpen) {
-      setModalOpen(false);
+      setModalOpen(false)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [account]);
+  }, [account])
 
   const handleOnConnect = (address: string) => {
-    alert(address);
-  };
+    alert(address)
+  }
 
   return (
     <div>
@@ -75,5 +69,5 @@ export default function Home() {
         <Map />
       </main>
     </div>
-  );
+  )
 }

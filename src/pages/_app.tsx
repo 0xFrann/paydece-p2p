@@ -1,10 +1,10 @@
-import { WagmiConfig } from "wagmi";
-import client from "../constants/wagmiClient";
-import { Provider } from "react-redux";
-import type { AppProps } from "next/app";
-import "tailwindcss/tailwind.css";
-import "../styles/globals.css";
-import { store } from "../app/store";
+import type { AppProps } from 'next/app'
+import { Provider } from 'react-redux'
+import 'tailwindcss/tailwind.css'
+import { WagmiConfig } from 'wagmi'
+import { store } from '../app/store'
+import client from '../constants/wagmiClient'
+import '../styles/globals.css'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -13,7 +13,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Component {...pageProps} />
       </WagmiConfig>
     </Provider>
-  );
+  )
 }
 
-export default MyApp;
+export default MyApp

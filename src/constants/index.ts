@@ -1,5 +1,5 @@
-import getConfig from "next/config";
+import getConfig from 'next/config'
 
-const { publicRuntimeConfig } = getConfig();
+const { publicRuntimeConfig } = getConfig()
 
-export const MAPBOX_GL_TOKEN = publicRuntimeConfig.MAPBOX_GL_TOKEN;
+export const MAPBOX_GL_TOKEN = publicRuntimeConfig.MAPBOX_GL_TOKEN

@@ -1,32 +1,32 @@
-import React, { useMemo, useState } from "react";
-import Map, { Marker, Popup } from "react-map-gl";
-import "mapbox-gl/dist/mapbox-gl.css";
-import { randomCirclePoint } from "random-location";
-import PointIcon from "../../assets/point-icon.svg";
-import RadiusIcon from "../../assets/radius-mark.svg";
-import CloseIcon from "../../assets/close-icon.svg";
-import WhatsAppIcon from "../../assets/whatsapp-icon.svg";
-import LinkIcon from "../../assets/link-icon.svg";
-import { TPoint } from "../../types";
+import 'mapbox-gl/dist/mapbox-gl.css'
+import { randomCirclePoint } from 'random-location'
+import React, { useMemo, useState } from 'react'
+import Map, { Marker, Popup } from 'react-map-gl'
+import CloseIcon from '../../assets/close-icon.svg'
+import LinkIcon from '../../assets/link-icon.svg'
+import PointIcon from '../../assets/point-icon.svg'
+import RadiusIcon from '../../assets/radius-mark.svg'
+import WhatsAppIcon from '../../assets/whatsapp-icon.svg'
+import { MAPBOX_GL_TOKEN } from '../../constants'
+import { TPoint } from '../../types'
 import {
-  MarkerStyle,
-  PopupContentStyle,
-  PopupCloseIconStyle,
-  PopupTitleStyle,
-  PopupSubTitleStyle,
   AddressStyle,
-  LinksStyle,
-  WhatsAppIconStyle,
   LinkIconStyle,
+  LinksStyle,
+  MarkerStyle,
   PointPointStyle,
-  UserPointStyle
-} from "./styles";
-import { MAPBOX_GL_TOKEN } from "../../constants";
+  PopupCloseIconStyle,
+  PopupContentStyle,
+  PopupSubTitleStyle,
+  PopupTitleStyle,
+  UserPointStyle,
+  WhatsAppIconStyle,
+} from './styles'
 
 interface IMapProps {
-  lat?: number;
-  lng?: number;
-  data?: TPoint[];
+  lat?: number
+  lng?: number
+  data?: TPoint[]
 }
 
 const DEFAULT_PROPS: IMapProps = {
@@ -34,26 +34,26 @@ const DEFAULT_PROPS: IMapProps = {
   lng: -64.183319,
   data: [
     {
-      id: "123",
-      name: "Test",
+      id: '123',
+      name: 'Test',
       location: {
         latLng: {
           lat: -31.4271906,
-          lng: -64.1824606
+          lng: -64.1824606,
         },
-        address: "Santiago Derqui 419, GXI, Provincia de Córdoba, Argentina"
+        address: 'Santiago Derqui 419, GXI, Provincia de Córdoba, Argentina',
       },
-      category: "Belleza y Cuidado Personal"
-    }
-  ]
-};
+      category: 'Belleza y Cuidado Personal',
+    },
+  ],
+}
 
 const MapComponent = ({
   lat = DEFAULT_PROPS.lat,
   lng = DEFAULT_PROPS.lng,
-  data = DEFAULT_PROPS.data
+  data = DEFAULT_PROPS.data,
 }: IMapProps): React.ReactElement => {
-  const [selectedPoint, setSelectedPoint] = useState<TPoint>(null);
+  const [selectedPoint, setSelectedPoint] = useState<TPoint>(null)
 
   const DATA_POINTS = useMemo(() => {
     return data
@@ -61,28 +61,28 @@ const MapComponent = ({
           const { latitude: lat, longitude: lng } = randomCirclePoint(
             {
               latitude: point.location.latLng.lat,
-              longitude: point.location.latLng.lng
+              longitude: point.location.latLng.lng,
             },
             100
-          );
+          )
           return {
             ...point,
             location: {
               ...point.location,
-              latLng: { lat, lng }
-            }
-          };
+              latLng: { lat, lng },
+            },
+          }
         })
-      : [];
-  }, [data]);
+      : []
+  }, [data])
 
   const handleClickMarker = (point: TPoint): void => {
-    setSelectedPoint(point);
-  };
+    setSelectedPoint(point)
+  }
 
   const handleClosePopup = (): void => {
-    setSelectedPoint(null);
-  };
+    setSelectedPoint(null)
+  }
 
   return (
     <Map
@@ -90,16 +90,16 @@ const MapComponent = ({
       initialViewState={{
         longitude: lng,
         latitude: lat,
-        zoom: 13
+        zoom: 13,
       }}
       mapStyle="mapbox://styles/mapbox/streets-v9"
       style={{
-        height: "100%",
-        width: "100%"
+        height: '100%',
+        width: '100%',
       }}
       {...(selectedPoint && {
         longitude: selectedPoint?.location.latLng.lng,
-        latitude: selectedPoint?.location.latLng.lat
+        latitude: selectedPoint?.location.latLng.lat,
       })}
     >
       <>
@@ -111,8 +111,8 @@ const MapComponent = ({
                 latitude={point?.location.latLng?.lat}
                 key={point?.id}
                 onClick={(e) => {
-                  e.originalEvent.stopPropagation();
-                  handleClickMarker(point);
+                  e.originalEvent.stopPropagation()
+                  handleClickMarker(point)
                 }}
               >
                 <div className={MarkerStyle}>
@@ -123,7 +123,7 @@ const MapComponent = ({
                   />
                 </div>
               </Marker>
-            );
+            )
           })}
         <Marker longitude={lng} latitude={lat}>
           <PointIcon width={24} height={24} className={UserPointStyle} />
@@ -174,7 +174,7 @@ const MapComponent = ({
               {selectedPoint?.contact?.link && (
                 <a
                   href={
-                    selectedPoint.contact.link.startsWith("http")
+                    selectedPoint.contact.link.startsWith('http')
                       ? selectedPoint.contact.link
                       : `//${selectedPoint.contact.link}`
                   }
@@ -189,7 +189,7 @@ const MapComponent = ({
         )}
       </>
     </Map>
-  );
-};
+  )
+}
 
-export default MapComponent;
+export default MapComponent

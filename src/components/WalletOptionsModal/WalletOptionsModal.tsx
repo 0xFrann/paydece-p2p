@@ -1,15 +1,15 @@
-import Image from "next/image";
-import { useEffect } from "react";
-import { useConnect } from "wagmi";
+import Image from 'next/image'
+import { useEffect } from 'react'
+import { useConnect } from 'wagmi'
 
 interface Props {
-  open: boolean;
-  setOpen: (showWalletOptions: boolean) => void;
-  onConnect: (address: string) => void;
+  open: boolean
+  setOpen: (showWalletOptions: boolean) => void
+  onConnect: (address: string) => void
 }
 
 export default function WalletOptionsModal(props: Props) {
-  const { open, setOpen, onConnect } = props;
+  const { open, setOpen, onConnect } = props
   const {
     connect,
     connectors,
@@ -17,13 +17,13 @@ export default function WalletOptionsModal(props: Props) {
     isConnecting,
     pendingConnector,
     isConnected,
-    data
-  } = useConnect();
+    data,
+  } = useConnect()
 
   useEffect(() => {
-    if (open && isConnected) onConnect(data?.account);
+    if (open && isConnected) onConnect(data?.account)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isConnected]);
+  }, [isConnected])
 
   return open ? (
     <>
@@ -55,17 +55,17 @@ export default function WalletOptionsModal(props: Props) {
                         width={32}
                       />
                       {c.name}
-                      {!c.ready && " (unsupported)"}
+                      {!c.ready && ' (unsupported)'}
                       {isConnecting &&
                         c.id === pendingConnector?.id &&
-                        " (connecting)"}
+                        ' (connecting)'}
                     </div>
                   </button>
                 </div>
               ))}
             {error && (
               <div className="ml-2 text-red-500">
-                {error?.message ?? "Failed to connect"}
+                {error?.message ?? 'Failed to connect'}
               </div>
             )}
 
@@ -83,5 +83,5 @@ export default function WalletOptionsModal(props: Props) {
       </div>
       <div className="fixed inset-0 z-40 bg-black opacity-25"></div>
     </>
-  ) : null;
+  ) : null
 }

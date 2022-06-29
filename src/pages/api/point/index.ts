@@ -1,9 +1,9 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { TPoint } from "../../../types";
-import db from "../../../utils/db";
+import { NextApiRequest, NextApiResponse } from 'next'
+import { TPoint } from '../../../types'
+import db from '../../../utils/db'
 
 interface IPointCreation extends NextApiRequest {
-  body: Omit<TPoint, "id">;
+  body: Omit<TPoint, 'id'>
 }
 
 export default async (
@@ -11,9 +11,9 @@ export default async (
   res: NextApiResponse
 ): Promise<void> => {
   try {
-    const { name, location } = req.body;
-    const points = await db.collection("points").get();
-    const pointsData = points.docs.map((points) => points.data());
+    const { name, location } = req.body
+    const points = await db.collection('points').get()
+    const pointsData = points.docs.map((points) => points.data())
 
     if (
       pointsData.some(
@@ -22,16 +22,16 @@ export default async (
       )
     ) {
       res.status(409).json({
-        message: "Point already exists"
-      });
+        message: 'Point already exists',
+      })
     } else {
-      const { id } = await db.collection("points").add({
+      const { id } = await db.collection('points').add({
         ...req.body,
-        created: new Date().toISOString()
-      });
-      res.status(200).json({ id });
+        created: new Date().toISOString(),
+      })
+      res.status(200).json({ id })
     }
   } catch (e) {
-    res.status(400).end();
+    res.status(400).end()
   }
-};
+}

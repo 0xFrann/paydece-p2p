@@ -1,14 +1,14 @@
-import { useState } from "react";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { useState } from 'react'
+import { useAppDispatch, useAppSelector } from '../app/hooks'
 import {
+  selectOwnLocation,
   setLocation,
-  selectOwnLocation
-} from "../features/ownLocation/ownLocationSlice";
+} from '../features/ownLocation/ownLocationSlice'
 
 const LocationViewPage: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const location = useAppSelector(selectOwnLocation);
-  const [currentLocation, setCurrentLocation] = useState<string>("");
+  const dispatch = useAppDispatch()
+  const location = useAppSelector(selectOwnLocation)
+  const [currentLocation, setCurrentLocation] = useState<string>('')
 
   return (
     <>
@@ -30,9 +30,9 @@ const LocationViewPage: React.FC = () => {
               setLocation({
                 latLng: {
                   lat: 0,
-                  lng: 0
+                  lng: 0,
                 },
-                address: currentLocation
+                address: currentLocation,
               })
             )
           }
@@ -41,7 +41,7 @@ const LocationViewPage: React.FC = () => {
         </button>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default LocationViewPage;
+export default LocationViewPage

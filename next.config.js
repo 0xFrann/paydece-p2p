@@ -2,16 +2,16 @@
 const nextConfig = {
   reactStrictMode: true,
   publicRuntimeConfig: {
-    MAPBOX_GL_TOKEN: process.env.MAPBOX_GL_TOKEN
+    MAPBOX_GL_TOKEN: process.env.MAPBOX_GL_TOKEN,
   },
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
-      use: ["@svgr/webpack"]
-    });
+      use: ['@svgr/webpack'],
+    })
 
-    return config;
-  }
-};
+    return config
+  },
+}
 
-module.exports = nextConfig;
+module.exports = nextConfig
