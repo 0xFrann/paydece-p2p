@@ -1,17 +1,15 @@
 import Document, { Head, Html, Main, NextScript } from 'next/document'
-import Script from 'next/script'
-import React from 'react'
 
 class MyDocument extends Document {
   render(): JSX.Element {
     return (
       <Html>
         <Head>
-          <Script
+          <script
             src={`https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_MAPS_API_KEY}&libraries=places`}
-          ></Script>
+          ></script>
           {/* <!-- Google Tag Manager --> */}
-          <Script
+          <script
             id="tag-manager-script"
             // dangerouslySetInnerHTML={{
             //   __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -20,7 +18,7 @@ class MyDocument extends Document {
             //   'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
             //   })(window,document,'script','dataLayer','GTM-PBMNWG9');`
             // }}
-          />
+          ></script>
           {/* <!-- End Google Tag Manager --> */}
         </Head>
         <body>

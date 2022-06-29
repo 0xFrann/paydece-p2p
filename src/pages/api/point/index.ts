@@ -3,7 +3,7 @@ import db from '../../../services/db'
 import { TPoint } from '../../../types'
 
 interface IPointCreation extends NextApiRequest {
-  body: Omit<TPoint, 'id'>
+  body: Omit<TPoint, 'id' | 'updated' | 'created'>
 }
 
 export default async (

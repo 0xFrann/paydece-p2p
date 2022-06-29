@@ -14,7 +14,7 @@ import {
   LinkIconStyle,
   LinksStyle,
   MarkerStyle,
-  PointPointStyle,
+  PointStyle,
   PopupCloseIconStyle,
   PopupContentStyle,
   PopupSubTitleStyle,
@@ -32,20 +32,7 @@ interface IMapProps {
 const DEFAULT_PROPS: IMapProps = {
   lat: -31.4173391,
   lng: -64.183319,
-  data: [
-    {
-      id: '123',
-      name: 'Test',
-      location: {
-        latLng: {
-          lat: -31.4271906,
-          lng: -64.1824606,
-        },
-        address: 'Santiago Derqui 419, GXI, Provincia de Córdoba, Argentina',
-      },
-      category: 'Belleza y Cuidado Personal',
-    },
-  ],
+  data: [],
 }
 
 const MapComponent = ({
@@ -116,11 +103,7 @@ const MapComponent = ({
                 }}
               >
                 <div className={MarkerStyle}>
-                  <RadiusIcon
-                    width={75}
-                    height={75}
-                    className={PointPointStyle}
-                  />
+                  <RadiusIcon width={75} height={75} className={PointStyle} />
                 </div>
               </Marker>
             )
@@ -146,9 +129,7 @@ const MapComponent = ({
               className={PopupCloseIconStyle}
             />
             <span className={PopupTitleStyle}>{selectedPoint?.name}</span>
-            <span className={PopupSubTitleStyle}>
-              {selectedPoint?.category}
-            </span>
+            <span className={PopupSubTitleStyle}>F2F</span>
             <a
               href={`https://maps.google.com/?q=${selectedPoint?.location?.latLng.lat},${selectedPoint?.location?.latLng.lng}`}
               target="_blank"

@@ -1,58 +1,82 @@
+import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useAccount } from 'wagmi'
-import PlacesAutocomplete from '../components/PlacesAutocomplete'
-import { useAddPointMutation, useGetPointsQuery } from '../services/points'
-import { TLocation } from '../types'
+import PlacesAutocomplete from '../../components/PlacesAutocomplete'
+import {
+  useGetPointByIdQuery,
+  useUpdatePointMutation,
+} from '../../services/points'
+import { TLocation, TPoint, TPointFormValues } from '../../types'
 
-type TPointFormValues = {
-  name: string
-  address: string
-  category: string
-  whatsapp: string
-  link: string
-}
+const EditPointPage: React.FC = () => {
+  const router = useRouter()
+  const { pid } = router.query
 
-const PointViewPage: React.FC = () => {
-  const { data: points, error, isLoading, refetch } = useGetPointsQuery()
-  const [addPoint, { isLoading: isAdding, isSuccess }] = useAddPointMutation()
+  const {
+    data: point,
+    error: pointError,
+    isLoading: pointIsLoading,
+    refetch: pointRefetch,
+  } = useGetPointByIdQuery(String(pid))
+  const [updatePoint, { isLoading: isUpdating, isSuccess }] =
+    useUpdatePointMutation()
   const { data: account } = useAccount()
 
   const [location, selectLocation] = useState<TLocation>()
+
+  const setDefaultValues = (values: TPoint): TPointFormValues => {
+    return {
+      name: values?.name || '',
+      address: values?.location?.address || '',
+      whatsapp: String(values?.contact?.whatsapp) || '',
+      link: values?.contact?.link || '',
+    }
+  }
 
   const {
     register,
     handleSubmit,
     reset: resetForm,
     formState: { errors },
-  } = useForm()
+  } = useForm({
+    defaultValues: setDefaultValues(point),
+  })
 
   const onSubmit: SubmitHandler<TPointFormValues> = (data) => {
     const whatsappNumber = String(data.whatsapp || '').replace(/\D+/g, '')
-    addPoint({
+
+    updatePoint({
+      id: point.id,
       name: data.name,
-      owner: account.address,
+      owner: point.owner,
       location: { ...location },
       contact: {
         whatsapp: Number(whatsappNumber) || null,
         link: data.link,
       },
+    }).then(() => {
+      pointRefetch()
+      resetForm()
     })
   }
 
   useEffect(() => {
-    if (isSuccess) {
-      resetForm()
-      refetch()
+    if (point?.id) {
+      resetForm(setDefaultValues(point))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSuccess])
+  }, [point])
+
+  if (point && account && account.address !== point.owner) {
+    return <h1 className={TitleSyle}>You are not the owner of this point</h1>
+  }
 
   return (
     <>
-      <h1 className={TitleSyle}>Add Point</h1>
-      {isAdding ? (
-        <span>Adding new post</span>
+      <h1 className={TitleSyle}>Edit Point</h1>
+      {isUpdating || pointIsLoading ? (
+        <span>Loading point</span>
       ) : (
         <form className={FormStyle} onSubmit={handleSubmit(onSubmit)}>
           <input
@@ -64,6 +88,7 @@ const PointViewPage: React.FC = () => {
           <PlacesAutocomplete
             onSelect={selectLocation}
             className={errors.address ? ErrorStyle : ''}
+            defaultValue={point?.location?.address}
             {...register('address', { required: true })}
           />
           <input
@@ -85,26 +110,15 @@ const PointViewPage: React.FC = () => {
             })}
           />
           <button className={ButtonStyle} type="submit">
-            Add Point
+            Edit Point
           </button>
         </form>
-      )}
-
-      <h1 className={TitleSyle}>Point List</h1>
-      {error && <strong>Something went wrong</strong>}
-      {isLoading && <strong>Loading</strong>}
-      {points && (
-        <ul>
-          {points.map((d) => (
-            <li key={d.id}>{d.name}</li>
-          ))}
-        </ul>
       )}
     </>
   )
 }
 
-export default PointViewPage
+export default EditPointPage
 
 const TitleSyle = 'text-4xl'
 const FormStyle = 'flex flex-col text-center w-full'

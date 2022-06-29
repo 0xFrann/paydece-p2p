@@ -6,7 +6,7 @@ interface IPointRequest extends NextApiRequest {
   query: {
     id: string
   }
-  body: TPoint
+  body: Omit<TPoint, 'id' | 'created' | 'updated'>
 }
 
 export default async (

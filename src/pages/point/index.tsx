@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useAccount } from 'wagmi'
-import PlacesAutocomplete from '../components/PlacesAutocomplete'
-import { useAddPointMutation, useGetPointsQuery } from '../services/points'
-import { TLocation } from '../types'
+import PlacesAutocomplete from '../../components/PlacesAutocomplete'
+import { useAddPointMutation, useGetPointsQuery } from '../../services/points'
+import { TLocation } from '../../types'
 
 type TPointFormValues = {
   name: string
@@ -13,7 +13,7 @@ type TPointFormValues = {
   link: string
 }
 
-const PointViewPage: React.FC = () => {
+const NewPointPage: React.FC = () => {
   const { data: points, error, isLoading, refetch } = useGetPointsQuery()
   const [addPoint, { isLoading: isAdding, isSuccess }] = useAddPointMutation()
   const { data: account } = useAccount()
@@ -104,7 +104,7 @@ const PointViewPage: React.FC = () => {
   )
 }
 
-export default PointViewPage
+export default NewPointPage
 
 const TitleSyle = 'text-4xl'
 const FormStyle = 'flex flex-col text-center w-full'
