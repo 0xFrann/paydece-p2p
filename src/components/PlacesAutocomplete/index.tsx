@@ -93,6 +93,9 @@ const PlacesAutocomplete = forwardRef(
           structured_formatting: { main_text, secondary_text },
         } = suggestion
 
+        if (suggestion.terms[suggestion.terms.length - 2].value !== 'Córdoba')
+          return
+
         return (
           <div
             key={place_id}

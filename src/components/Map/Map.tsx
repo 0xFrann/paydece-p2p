@@ -1,6 +1,6 @@
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { randomCirclePoint } from 'random-location'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Map, { Marker, Popup } from 'react-map-gl'
 import CloseIcon from '../../assets/close-icon.svg'
 import LinkIcon from '../../assets/link-icon.svg'
@@ -8,9 +8,8 @@ import PointIcon from '../../assets/point-icon.svg'
 import RadiusIcon from '../../assets/radius-mark.svg'
 import WhatsAppIcon from '../../assets/whatsapp-icon.svg'
 import { MAPBOX_GL_TOKEN } from '../../constants'
-import { TPoint } from '../../types'
+import { TLocation, TPoint } from '../../types'
 import {
-  AddressStyle,
   LinkIconStyle,
   LinksStyle,
   MarkerStyle,
@@ -42,6 +41,10 @@ const MapComponent = ({
 }: IMapProps): React.ReactElement => {
   const [selectedPoint, setSelectedPoint] = useState<TPoint>(null)
   const [currentZoom, setCurrentZoom] = useState<number>(13)
+  const [currentCenter, setCurrentCenter] = useState<TLocation['latLng']>({
+    lat,
+    lng,
+  })
 
   const DATA_POINTS = useMemo(() => {
     return data
@@ -72,6 +75,10 @@ const MapComponent = ({
     setSelectedPoint(null)
   }
 
+  useEffect(() => {
+    setCurrentCenter({ lat, lng })
+  }, [lat, lng])
+
   return (
     <Map
       mapboxAccessToken={MAPBOX_GL_TOKEN}
@@ -80,7 +87,15 @@ const MapComponent = ({
         latitude: lat,
         zoom: 13,
       }}
+      latitude={currentCenter.lat}
+      longitude={currentCenter.lng}
       onZoom={(data) => setCurrentZoom(data.viewState.zoom)}
+      onMove={(data) =>
+        setCurrentCenter({
+          lat: data.viewState.latitude,
+          lng: data.viewState.longitude,
+        })
+      }
       mapStyle="mapbox://styles/mapbox/streets-v9"
       style={{
         height: '100%',
@@ -108,14 +123,18 @@ const MapComponent = ({
                   <RadiusIcon
                     width={Math.round(0.01 * Math.pow(2, currentZoom))}
                     height={Math.round(0.01 * Math.pow(2, currentZoom))}
-                    className={PointStyle}
+                    className={`${PointStyle} ${
+                      selectedPoint?.id === point.id
+                        ? 'opacity-100'
+                        : 'opacity-70'
+                    }`}
                   />
                 </div>
               </Marker>
             )
           })}
         <Marker longitude={lng} latitude={lat}>
-          <PointIcon width={24} height={24} className={UserPointStyle} />
+          <PointIcon width={32} height={32} className={UserPointStyle} />
         </Marker>
         {selectedPoint && (
           <Popup
@@ -136,14 +155,6 @@ const MapComponent = ({
             />
             <span className={PopupTitleStyle}>{selectedPoint?.name}</span>
             <span className={PopupSubTitleStyle}>F2F</span>
-            <a
-              href={`https://maps.google.com/?q=${selectedPoint?.location?.latLng.lat},${selectedPoint?.location?.latLng.lng}`}
-              target="_blank"
-              rel="noreferrer"
-              className={AddressStyle}
-            >
-              {selectedPoint?.location?.address}
-            </a>
             <span className={LinksStyle}>
               {selectedPoint?.contact?.whatsapp && (
                 <a

@@ -1,26 +1,22 @@
 import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
-import { useAccount, useDisconnect, useEnsAvatar, useEnsName } from 'wagmi'
+import AddressBar from '../components/AddressBar/AddressBar'
+import Header from '../components/Header/Header'
+import Welcome from '../components/Welcome/Welcome'
 import { useGetPointsQuery } from '../services/points'
+import { TLocation } from '../types'
 
 const Map = dynamic(() => import('../components/Map/Map'), {
   ssr: false,
 })
-const WalletOptionsModal = dynamic(
-  () => import('../components/WalletOptionsModal/WalletOptionsModal'),
-  {
-    ssr: false,
-  }
-)
 
 export default function Home() {
-  const { data: account } = useAccount()
-  const { data: ensAvatar } = useEnsAvatar({ addressOrName: account?.address })
-  const { data: ensName } = useEnsName({ address: account?.address })
-  const { disconnect } = useDisconnect()
-  const [isModalOpen, setModalOpen] = useState(false)
-  const [isAccountVisible, setAccountVisibility] = useState(false)
+  const [isWelcomeVisible, setWelcomeVisible] = useState(true)
+  const [currentLocation, setCurrentLocation] = useState<TLocation['latLng']>({
+    lat: -31.4173391,
+    lng: -64.183319,
+  })
 
   const {
     data: points,
@@ -30,23 +26,14 @@ export default function Home() {
   } = useGetPointsQuery()
 
   useEffect(() => {
-    if (account && isModalOpen) {
-      setModalOpen(false)
-    }
-    if (account) {
-      setAccountVisibility(true)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [account])
+    let timeout = setTimeout(() => {
+      setWelcomeVisible(false)
+    }, 4000)
 
-  const handleOnConnect = (address: string) => {
-    alert(address)
-    setAccountVisibility(true)
-  }
-  const handleDisconnect = () => {
-    disconnect()
-    setAccountVisibility(false)
-  }
+    return () => {
+      clearTimeout(timeout)
+    }
+  }, [])
 
   return (
     <>
@@ -56,41 +43,21 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="h-screen flex flex-col items-center justify-center">
-        <h1 className="text-6xl mb-8">PayDece P2P</h1>
-        {isAccountVisible && (
-          <div className="flex justify-center flex-col">
-            <div className="mb-4 text-center">
-              {ensAvatar && <img src={ensAvatar} alt="ENS Avatar" />}
-              <div>
-                {ensName ? `${ensName} (${account.address})` : account.address}
-              </div>
-              <div className="text-green-600">
-                Connected to {account?.connector?.name}
-              </div>
-            </div>
-            <button
-              onClick={handleDisconnect}
-              className="px-4 py-2 mx-2 rounded-full bg-blue-400"
-            >
-              Disconnect
-            </button>
+      <main className="h-screen relative flex flex-col items-center justify-center brand-gradient-vertical">
+        <h1 className="text-6xl mb-8 hidden">PayDece P2P</h1>
+        {isWelcomeVisible ? (
+          <Welcome />
+        ) : (
+          <div className="absolute top-0 left-0 w-full z-10">
+            <Header />
+            <AddressBar onChange={(latLng) => setCurrentLocation(latLng)} />
           </div>
         )}
-        {!isAccountVisible && (
-          <div className="flex justify-center">
-            <button onClick={() => setModalOpen((prev) => !prev)}>
-              Connect Wallet
-            </button>
-          </div>
-        )}
-        <WalletOptionsModal
-          open={isModalOpen}
-          setOpen={setModalOpen}
-          onConnect={handleOnConnect}
+        <Map
+          data={points}
+          lat={currentLocation.lat}
+          lng={currentLocation.lng}
         />
-
-        {isAccountVisible && <Map data={points} />}
       </main>
     </>
   )
