@@ -41,6 +41,7 @@ const MapComponent = ({
   data = DEFAULT_PROPS.data,
 }: IMapProps): React.ReactElement => {
   const [selectedPoint, setSelectedPoint] = useState<TPoint>(null)
+  const [currentZoom, setCurrentZoom] = useState<number>(13)
 
   const DATA_POINTS = useMemo(() => {
     return data
@@ -79,6 +80,7 @@ const MapComponent = ({
         latitude: lat,
         zoom: 13,
       }}
+      onZoom={(data) => setCurrentZoom(data.viewState.zoom)}
       mapStyle="mapbox://styles/mapbox/streets-v9"
       style={{
         height: '100%',
@@ -103,7 +105,11 @@ const MapComponent = ({
                 }}
               >
                 <div className={MarkerStyle}>
-                  <RadiusIcon width={75} height={75} className={PointStyle} />
+                  <RadiusIcon
+                    width={Math.round(0.01 * Math.pow(2, currentZoom))}
+                    height={Math.round(0.01 * Math.pow(2, currentZoom))}
+                    className={PointStyle}
+                  />
                 </div>
               </Marker>
             )

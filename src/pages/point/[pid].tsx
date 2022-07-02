@@ -19,6 +19,7 @@ const EditPointPage: React.FC = () => {
     isLoading: pointIsLoading,
     refetch: pointRefetch,
   } = useGetPointByIdQuery(String(pid))
+
   const [updatePoint, { isLoading: isUpdating, isSuccess }] =
     useUpdatePointMutation()
   const { data: account } = useAccount()

@@ -90,7 +90,7 @@ export default function Home() {
           onConnect={handleOnConnect}
         />
 
-        <Map data={points} />
+        {isAccountVisible && <Map data={points} />}
       </main>
     </>
   )
