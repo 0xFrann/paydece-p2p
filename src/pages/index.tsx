@@ -11,7 +11,7 @@ const Map = dynamic(() => import('../components/Map/Map'), {
   ssr: false,
 })
 
-export default function Home() {
+const Home = (): JSX.Element => {
   const [isWelcomeVisible, setWelcomeVisible] = useState(true)
   const [currentLocation, setCurrentLocation] = useState<TLocation['latLng']>({
     lat: -31.4173391,
@@ -20,13 +20,13 @@ export default function Home() {
 
   const {
     data: points,
-    error: pointsError,
-    isLoading: pointsIsLoading,
-    refetch: pointsRefetch,
+    // error: pointsError,
+    // isLoading: pointsIsLoading,
+    // refetch: pointsRefetch,
   } = useGetPointsQuery()
 
   useEffect(() => {
-    let timeout = setTimeout(() => {
+    const timeout = setTimeout(() => {
       setWelcomeVisible(false)
     }, 3000)
 
@@ -62,3 +62,5 @@ export default function Home() {
     </>
   )
 }
+
+export default Home

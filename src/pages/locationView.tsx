@@ -5,7 +5,7 @@ import {
   setLocation,
 } from '../features/ownLocation/ownLocationSlice'
 
-const LocationViewPage: React.FC = () => {
+const LocationViewPage = (): JSX.Element => {
   const dispatch = useAppDispatch()
   const location = useAppSelector(selectOwnLocation)
   const [currentLocation, setCurrentLocation] = useState<string>('')
@@ -25,6 +25,7 @@ const LocationViewPage: React.FC = () => {
           onChange={(e) => setCurrentLocation(String(e.target.value))}
         />
         <button
+          type="button"
           onClick={() =>
             dispatch(
               setLocation({

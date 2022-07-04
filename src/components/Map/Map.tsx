@@ -1,6 +1,6 @@
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { randomCirclePoint } from 'random-location'
-import React, { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Map, { Marker, Popup } from 'react-map-gl'
 import CloseIcon from '../../assets/close-icon.svg'
 import LinkIcon from '../../assets/link-icon.svg'
@@ -38,7 +38,7 @@ const MapComponent = ({
   lat = DEFAULT_PROPS.lat,
   lng = DEFAULT_PROPS.lng,
   data = DEFAULT_PROPS.data,
-}: IMapProps): React.ReactElement => {
+}: IMapProps): JSX.Element => {
   const [selectedPoint, setSelectedPoint] = useState<TPoint>(null)
   const [currentZoom, setCurrentZoom] = useState<number>(13)
   const [currentCenter, setCurrentCenter] = useState<TLocation['latLng']>({
@@ -121,8 +121,8 @@ const MapComponent = ({
               >
                 <div className={MarkerStyle}>
                   <RadiusIcon
-                    width={Math.round(0.01 * Math.pow(2, currentZoom))}
-                    height={Math.round(0.01 * Math.pow(2, currentZoom))}
+                    width={Math.round(0.01 * 2 ** currentZoom)}
+                    height={Math.round(0.01 * 2 ** currentZoom)}
                     className={`${PointStyle} ${
                       selectedPoint?.id === point.id
                         ? 'opacity-100'
@@ -144,7 +144,7 @@ const MapComponent = ({
             offset={[7, -20]}
             className={PopupContentStyle}
             closeButton={false}
-            closeOnMove={true}
+            closeOnMove
             onClose={handleClosePopup}
           >
             <CloseIcon

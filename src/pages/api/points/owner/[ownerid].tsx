@@ -17,8 +17,8 @@ export default async (
           ...data.data(),
         } as TPoint)
     )
-    const pointByOwner = pointsData.filter((p) => p.owner == ownerid)[0]
-    if (typeof pointByOwner === undefined) throw new Error('No point found')
+    const pointByOwner = pointsData.filter((p) => p.owner === ownerid)[0]
+    if (typeof pointByOwner === 'undefined') throw new Error('No point found')
     res.status(200).json(pointByOwner)
   } catch (e) {
     res.status(400).end(e.message)

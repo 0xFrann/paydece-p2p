@@ -59,6 +59,10 @@
     "jsx-a11y/media-has-caption": "off",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
+    "react/function-component-definition": [
+      1,
+      { "namedComponents": "arrow-function" }
+    ],
     "@typescript-eslint/explicit-function-return-type": [
       "warn",
       {

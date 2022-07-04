@@ -6,7 +6,7 @@ import { store } from '../app/store'
 import client from '../constants/wagmiClient'
 import '../styles/globals.css'
 
-function MyApp({ Component, pageProps }: AppProps) {
+const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
   return (
     <Provider store={store}>
       <WagmiConfig client={client}>

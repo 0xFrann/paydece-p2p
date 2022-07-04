@@ -8,7 +8,7 @@ interface Props {
   onConnect: (address: string) => void
 }
 
-export default function WalletOptionsModal(props: Props) {
+const WalletOptionsModal = (props: Props): JSX.Element => {
   const { open, setOpen, onConnect } = props
   const {
     connect,
@@ -46,6 +46,7 @@ export default function WalletOptionsModal(props: Props) {
                     disabled={!c.ready}
                     onClick={() => connect(c)}
                     className="w-full py-2 rounded-full border-2 border-[color:var(--secondary)]"
+                    type="button"
                   >
                     <div className="flex justify-center items-center gap-4 text-black">
                       <Image
@@ -81,7 +82,9 @@ export default function WalletOptionsModal(props: Props) {
           </div>
         </div>
       </div>
-      <div className="fixed inset-0 z-40 bg-black opacity-25"></div>
+      <div className="fixed inset-0 z-40 bg-black opacity-25" />
     </>
   ) : null
 }
+
+export default WalletOptionsModal

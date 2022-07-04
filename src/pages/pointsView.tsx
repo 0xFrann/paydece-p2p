@@ -5,6 +5,14 @@ import PlacesAutocomplete from '../components/PlacesAutocomplete'
 import { useAddPointMutation, useGetPointsQuery } from '../services/points'
 import { TLocation } from '../types'
 
+const TitleSyle = 'text-4xl'
+const FormStyle = 'flex flex-col text-center w-full'
+const InputStyle =
+  'm-2 py-2 px-4 h-12 rounded-3xl outline-none focus:shadow-md border border-yellow-500'
+const ButtonStyle =
+  'm-2 h-12 px-6 rounded-full focus:outline-none bg-yellow-500 text-white border border-yellow-500'
+const ErrorStyle = 'ring-red-500 ring-2'
+
 type TPointFormValues = {
   name: string
   address: string
@@ -13,7 +21,7 @@ type TPointFormValues = {
   link: string
 }
 
-const PointViewPage: React.FC = () => {
+const PointViewPage = (): JSX.Element => {
   const { data: points, error, isLoading, refetch } = useGetPointsQuery()
   const [addPoint, { isLoading: isAdding, isSuccess }] = useAddPointMutation()
   const { data: account } = useAccount()
@@ -105,13 +113,3 @@ const PointViewPage: React.FC = () => {
 }
 
 export default PointViewPage
-
-const TitleSyle = 'text-4xl'
-const FormStyle = 'flex flex-col text-center w-full'
-const InputStyle =
-  'm-2 py-2 px-4 h-12 rounded-3xl outline-none focus:shadow-md border border-yellow-500'
-const SelectStyle =
-  'm-2 py-2 px-4 h-12 rounded-full outline-none focus:shadow-md bg-white border border-yellow-500'
-const ButtonStyle =
-  'm-2 h-12 px-6 rounded-full focus:outline-none bg-yellow-500 text-white border border-yellow-500'
-const ErrorStyle = 'ring-red-500 ring-2'

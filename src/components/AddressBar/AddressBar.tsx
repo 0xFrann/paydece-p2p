@@ -5,7 +5,7 @@ type Props = {
   onChange: (latLng: TLocation['latLng']) => void
 }
 
-const AddressBar = ({ onChange }: Props) => {
+const AddressBar = ({ onChange }: Props): JSX.Element => {
   return (
     <div className="m-2 bg-white border-2 border-[color:var(--primary)] rounded-full address-bar">
       <PlacesAutocomplete

@@ -4,8 +4,16 @@ import { useAccount } from 'wagmi'
 import Header from '../../components/Header/Header'
 import PlacesAutocomplete from '../../components/PlacesAutocomplete'
 import WalletConnect from '../../components/WalletConnect/WalletConnect'
-import { useAddPointMutation, useGetPointsQuery } from '../../services/points'
+import { useAddPointMutation } from '../../services/points'
 import { TLocation } from '../../types'
+
+const TitleSyle = 'text-4xl text-center font-bold text-[color:var(--primary)]'
+const FormStyle = 'flex flex-col text-center w-full mt-6'
+const InputStyle =
+  'm-2 py-2 px-4 h-12 rounded-3xl outline-none focus:shadow-md border border-[color:var(--primary)]'
+const ButtonStyle =
+  'm-2 h-12 px-6 rounded-full focus:outline-none bg-[color:var(--primary)] text-white border border-[color:var(--primary)]'
+const ErrorStyle = 'ring-red-500 ring-2'
 
 type TPointFormValues = {
   name: string
@@ -15,8 +23,7 @@ type TPointFormValues = {
   link: string
 }
 
-const NewPointPage: React.FC = () => {
-  const { data: points, error, isLoading, refetch } = useGetPointsQuery()
+const NewPointPage = (): JSX.Element => {
   const [addPoint, { isLoading: isAdding, isSuccess }] = useAddPointMutation()
   const { data: account } = useAccount()
   const [isFormVisible, setFormVisibility] = useState(!!account?.address)
@@ -60,7 +67,6 @@ const NewPointPage: React.FC = () => {
   useEffect(() => {
     if (isSuccess) {
       resetForm()
-      refetch()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess])
@@ -78,7 +84,7 @@ const NewPointPage: React.FC = () => {
           </div>
           <div
             className={`px-6 py-4 w-max mx-auto mt-4 ${
-              !!account?.address
+              account?.address
                 ? ''
                 : 'rounded-full bg-[color:var(--secondary)] text-white'
             }`}
@@ -132,13 +138,3 @@ const NewPointPage: React.FC = () => {
 }
 
 export default NewPointPage
-
-const TitleSyle = 'text-4xl text-center font-bold text-[color:var(--primary)]'
-const FormStyle = 'flex flex-col text-center w-full mt-6'
-const InputStyle =
-  'm-2 py-2 px-4 h-12 rounded-3xl outline-none focus:shadow-md border border-[color:var(--primary)]'
-const SelectStyle =
-  'm-2 py-2 px-4 h-12 rounded-full outline-none focus:shadow-md bg-white border border-[color:var(--primary)]'
-const ButtonStyle =
-  'm-2 h-12 px-6 rounded-full focus:outline-none bg-[color:var(--primary)] text-white border border-[color:var(--primary)]'
-const ErrorStyle = 'ring-red-500 ring-2'

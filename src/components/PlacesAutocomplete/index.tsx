@@ -8,12 +8,23 @@ import usePlacesAutocomplete, {
 import CloseIcon from '../../assets/close-icon.svg'
 import { TLocation } from '../../types'
 
+const WrapperStyle = 'relative m-2'
+const InputStyle =
+  'w-full py-2 px-4 h-12 rounded-3xl outline-none focus:shadow-md border border-[color:var(--primary)]'
+const ListWrapperStyle =
+  'absolute top-14 h-24 w-full bg-white rounded-lg overflow-hidden shadow-xl z-50'
+const ListStyle = 'h-full overflow-y-auto py-2'
+const ItemStyle = 'py-2 px-3 m-0 text-left'
+const InputCloseIconStyle = 'absolute top-4 right-3'
+
 interface IPlacesAutocomplete
   extends Partial<Omit<HTMLInputElement, 'min' | 'max'>> {
   onSelect?: (val: TLocation) => void
   onChange?: ChangeHandler
   onBlur?: ChangeHandler
+  // eslint-disable-next-line react/no-unused-prop-types
   min?: string | number
+  // eslint-disable-next-line react/no-unused-prop-types
   max?: string | number
 }
 
@@ -28,7 +39,7 @@ const PlacesAutocomplete = forwardRef(
       className,
     }: IPlacesAutocomplete,
     ref?: Ref<HTMLInputElement>
-  ): React.ReactElement => {
+  ): JSX.Element => {
     const {
       ready,
       value,
@@ -59,7 +70,7 @@ const PlacesAutocomplete = forwardRef(
     const handleInput = (e): void => {
       // Update the keyword of the input element
       setValue(e.target.value)
-      onChange && onChange(e)
+      if (onChange) onChange(e)
     }
 
     const handleSelect =
@@ -86,26 +97,30 @@ const PlacesAutocomplete = forwardRef(
         clearSuggestions()
       }
 
-    const renderSuggestions = (): React.ReactElement[] =>
+    const renderSuggestions = (): JSX.Element[] =>
       data.map((suggestion) => {
         const {
-          place_id,
-          structured_formatting: { main_text, secondary_text },
+          place_id: placeId,
+          structured_formatting: {
+            main_text: mainText,
+            secondary_text: secondaryText,
+          },
         } = suggestion
 
         if (suggestion.terms[suggestion.terms.length - 2].value !== 'Córdoba')
           return
 
+        // eslint-disable-next-line consistent-return
         return (
           <div
-            key={place_id}
+            key={placeId}
             onClick={handleSelect(suggestion)}
             onKeyDown={handleSelect(suggestion)}
             className={ItemStyle}
             role="button"
             tabIndex={0}
           >
-            <strong>{main_text}</strong> <small>{secondary_text}</small>
+            <strong>{mainText}</strong> <small>{secondaryText}</small>
           </div>
         )
       })
@@ -133,8 +148,8 @@ const PlacesAutocomplete = forwardRef(
             className={InputCloseIconStyle}
             onClick={() =>
               handleInput({
-                target: { value: '', name: name },
-                currentTarget: { value: '', name: name },
+                target: { value: '', name },
+                currentTarget: { value: '', name },
               })
             }
             onKeyDown={() => setValue('')}
@@ -150,12 +165,3 @@ const PlacesAutocomplete = forwardRef(
 )
 
 export default PlacesAutocomplete
-
-const WrapperStyle = 'relative m-2'
-const InputStyle =
-  'w-full py-2 px-4 h-12 rounded-3xl outline-none focus:shadow-md border border-[color:var(--primary)]'
-const ListWrapperStyle =
-  'absolute top-14 h-24 w-full bg-white rounded-lg overflow-hidden shadow-xl z-50'
-const ListStyle = 'h-full overflow-y-auto py-2'
-const ItemStyle = 'py-2 px-3 m-0 text-left'
-const InputCloseIconStyle = 'absolute top-4 right-3'

@@ -7,7 +7,8 @@ class MyDocument extends Document {
         <Head>
           <script
             src={`https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_MAPS_API_KEY}&libraries=places`}
-          ></script>
+            async
+          />
           {/* <!-- Google Tag Manager --> */}
           <script
             id="tag-manager-script"
@@ -18,7 +19,7 @@ class MyDocument extends Document {
             //   'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
             //   })(window,document,'script','dataLayer','GTM-PBMNWG9');`
             // }}
-          ></script>
+          />
           {/* <!-- End Google Tag Manager --> */}
         </Head>
         <body>

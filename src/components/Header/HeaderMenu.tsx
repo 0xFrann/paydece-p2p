@@ -18,7 +18,7 @@ interface IHeaderMenuProps {
 const HeaderMenu = ({
   visible = false,
   toggleVisible = () => {},
-}: IHeaderMenuProps): React.ReactElement => {
+}: IHeaderMenuProps): JSX.Element => {
   const router = useRouter()
   const goTo = (url: string): void => {
     router.push(url)
@@ -36,6 +36,7 @@ const HeaderMenu = ({
     } else {
       refetchAccount()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account?.address])
 
   return (
@@ -46,18 +47,27 @@ const HeaderMenu = ({
     >
       <ul className={MenuListStyle}>
         <li>
-          <button onClick={() => goTo('/')} className={MenuLinkStyle}>
+          <button
+            type="button"
+            onClick={() => goTo('/')}
+            className={MenuLinkStyle}
+          >
             ▸ Mapa
           </button>
         </li>
         <li>
-          <button onClick={() => goTo('/point')} className={MenuLinkStyle}>
+          <button
+            type="button"
+            onClick={() => goTo('/point')}
+            className={MenuLinkStyle}
+          >
             ▸ Agregar negocio
           </button>
         </li>
         {!!account?.address && !!point?.id && (
           <li>
             <button
+              type="button"
               onClick={() => goTo(`/point/${point.id}`)}
               className={MenuLinkStyle}
             >
@@ -73,7 +83,7 @@ const HeaderMenu = ({
       </ul>
       <div
         className={`px-4 py-2 w-max mx-auto mt-6 ${
-          !!account?.address
+          account?.address
             ? ''
             : 'rounded-full bg-[color:var(--secondary)] text-white'
         }`}

@@ -10,23 +10,31 @@ import {
 } from '../../services/points'
 import { TLocation, TPoint, TPointFormValues } from '../../types'
 
-const EditPointPage: React.FC = () => {
+const TitleSyle = 'text-4xl text-center font-bold text-[color:var(--primary)]'
+const FormStyle = 'flex flex-col text-center w-full mt-6'
+const InputStyle =
+  'm-2 py-2 px-4 h-12 rounded-3xl outline-none focus:shadow-md border border-[color:var(--primary)]'
+const ButtonStyle =
+  'm-2 h-12 px-6 rounded-full focus:outline-none bg-[color:var(--primary)] text-white border border-[color:var(--primary)]'
+const ErrorStyle = 'ring-red-500 ring-2'
+
+const EditPointPage = (): JSX.Element => {
   const router = useRouter()
   const { pid } = router.query
 
   const {
     data: point,
-    error: pointError,
+    // error: pointError,
     isLoading: pointIsLoading,
     refetch: pointRefetch,
   } = useGetPointByIdQuery(String(pid))
 
-  const [updatePoint, { isLoading: isUpdating, isSuccess }] =
-    useUpdatePointMutation()
+  const [updatePoint, { isLoading: isUpdating }] = useUpdatePointMutation()
   const { data: account } = useAccount()
 
   useEffect(() => {
     if (!account?.address) router.push('/')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account?.address])
 
   const [location, selectLocation] = useState<TLocation>()
@@ -128,13 +136,3 @@ const EditPointPage: React.FC = () => {
 }
 
 export default EditPointPage
-
-const TitleSyle = 'text-4xl text-center font-bold text-[color:var(--primary)]'
-const FormStyle = 'flex flex-col text-center w-full mt-6'
-const InputStyle =
-  'm-2 py-2 px-4 h-12 rounded-3xl outline-none focus:shadow-md border border-[color:var(--primary)]'
-const SelectStyle =
-  'm-2 py-2 px-4 h-12 rounded-full outline-none focus:shadow-md bg-white border border-[color:var(--primary)]'
-const ButtonStyle =
-  'm-2 h-12 px-6 rounded-full focus:outline-none bg-[color:var(--primary)] text-white border border-[color:var(--primary)]'
-const ErrorStyle = 'ring-red-500 ring-2'
