@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import db from '../../services/db'
-import { TPoint } from '../../types'
+import db from '../../../services/db'
+import { TPoint } from '../../../types'
 
 export default async (
   req: NextApiRequest,

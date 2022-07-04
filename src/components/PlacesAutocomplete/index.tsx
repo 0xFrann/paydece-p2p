@@ -153,7 +153,7 @@ export default PlacesAutocomplete
 
 const WrapperStyle = 'relative m-2'
 const InputStyle =
-  'w-full py-2 px-4 h-12 rounded-3xl outline-none focus:shadow-md border border-yellow-500'
+  'w-full py-2 px-4 h-12 rounded-3xl outline-none focus:shadow-md border border-[color:var(--primary)]'
 const ListWrapperStyle =
   'absolute top-14 h-24 w-full bg-white rounded-lg overflow-hidden shadow-xl z-50'
 const ListStyle = 'h-full overflow-y-auto py-2'

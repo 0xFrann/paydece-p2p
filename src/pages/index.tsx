@@ -28,7 +28,7 @@ export default function Home() {
   useEffect(() => {
     let timeout = setTimeout(() => {
       setWelcomeVisible(false)
-    }, 4000)
+    }, 3000)
 
     return () => {
       clearTimeout(timeout)

@@ -2,6 +2,7 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useAccount } from 'wagmi'
+import Header from '../../components/Header/Header'
 import PlacesAutocomplete from '../../components/PlacesAutocomplete'
 import {
   useGetPointByIdQuery,
@@ -23,6 +24,10 @@ const EditPointPage: React.FC = () => {
   const [updatePoint, { isLoading: isUpdating, isSuccess }] =
     useUpdatePointMutation()
   const { data: account } = useAccount()
+
+  useEffect(() => {
+    if (!account?.address) router.push('/')
+  }, [account?.address])
 
   const [location, selectLocation] = useState<TLocation>()
 
@@ -74,10 +79,13 @@ const EditPointPage: React.FC = () => {
   }
 
   return (
-    <>
-      <h1 className={TitleSyle}>Edit Point</h1>
+    <main className="h-screen relative">
+      <div className="mb-6">
+        <Header />
+      </div>
+      <h1 className={TitleSyle}>Mi Point</h1>
       {isUpdating || pointIsLoading ? (
-        <span>Loading point</span>
+        <span>Cargando Point</span>
       ) : (
         <form className={FormStyle} onSubmit={handleSubmit(onSubmit)}>
           <input
@@ -111,22 +119,22 @@ const EditPointPage: React.FC = () => {
             })}
           />
           <button className={ButtonStyle} type="submit">
-            Edit Point
+            Editar Point
           </button>
         </form>
       )}
-    </>
+    </main>
   )
 }
 
 export default EditPointPage
 
-const TitleSyle = 'text-4xl'
-const FormStyle = 'flex flex-col text-center w-full'
+const TitleSyle = 'text-4xl text-center font-bold text-[color:var(--primary)]'
+const FormStyle = 'flex flex-col text-center w-full mt-6'
 const InputStyle =
-  'm-2 py-2 px-4 h-12 rounded-3xl outline-none focus:shadow-md border border-yellow-500'
+  'm-2 py-2 px-4 h-12 rounded-3xl outline-none focus:shadow-md border border-[color:var(--primary)]'
 const SelectStyle =
-  'm-2 py-2 px-4 h-12 rounded-full outline-none focus:shadow-md bg-white border border-yellow-500'
+  'm-2 py-2 px-4 h-12 rounded-full outline-none focus:shadow-md bg-white border border-[color:var(--primary)]'
 const ButtonStyle =
-  'm-2 h-12 px-6 rounded-full focus:outline-none bg-yellow-500 text-white border border-yellow-500'
+  'm-2 h-12 px-6 rounded-full focus:outline-none bg-[color:var(--primary)] text-white border border-[color:var(--primary)]'
 const ErrorStyle = 'ring-red-500 ring-2'

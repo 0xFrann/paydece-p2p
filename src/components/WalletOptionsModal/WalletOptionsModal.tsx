@@ -29,9 +29,9 @@ export default function WalletOptionsModal(props: Props) {
     <>
       <div className="fixed inset-0 z-50 flex items-center justify-center">
         <div className="relative w-auto max-w-3xl mx-auto my-6">
-          <div className="relative flex flex-col bg-white border-0 rounded-lg shadow-lg">
+          <div className="relative flex flex-col bg-white border-0 rounded-lg shadow-lg p-4">
             <div className="flex items-center justify-around p-5 mb-4">
-              <h3 className="text-3xl font-semibold text-left">
+              <h3 className="text-3xl font-semibold text-left text-[color:var(--primary)]">
                 Choose a Wallet
               </h3>
             </div>
@@ -45,9 +45,9 @@ export default function WalletOptionsModal(props: Props) {
                   <button
                     disabled={!c.ready}
                     onClick={() => connect(c)}
-                    className="w-full py-2 rounded-full border-2 border-blue-200"
+                    className="w-full py-2 rounded-full border-2 border-[color:var(--secondary)]"
                   >
-                    <div className="flex justify-center items-center gap-4">
+                    <div className="flex justify-center items-center gap-4 text-black">
                       <Image
                         src={`/images/web3/wallet-${c.id}.svg`}
                         alt={c.name}

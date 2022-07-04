@@ -134,7 +134,7 @@ const MapComponent = ({
             )
           })}
         <Marker longitude={lng} latitude={lat}>
-          <PointIcon width={32} height={32} className={UserPointStyle} />
+          <PointIcon width={32} height={64} className={UserPointStyle} />
         </Marker>
         {selectedPoint && (
           <Popup

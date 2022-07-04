@@ -11,6 +11,9 @@ export const pointsAPI = createApi({
     getPointById: builder.query<TPoint, TPoint['id']>({
       query: (id) => `/api/point/${id}`,
     }),
+    getPointByOwner: builder.query<TPoint, string>({
+      query: (owner) => `/api/points/owner/${owner}`,
+    }),
     addPoint: builder.mutation<
       TPoint,
       Omit<TPoint, 'id' | 'created' | 'updated'>
@@ -34,6 +37,7 @@ export const pointsAPI = createApi({
 export const {
   useGetPointsQuery,
   useGetPointByIdQuery,
+  useGetPointByOwnerQuery,
   useAddPointMutation,
   useUpdatePointMutation,
 } = pointsAPI
