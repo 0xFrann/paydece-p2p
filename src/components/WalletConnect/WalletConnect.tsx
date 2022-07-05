@@ -42,7 +42,9 @@ const WalletConnect = ({
       {isAccountVisible && (
         <div className="flex justify-center flex-col">
           <div className="mb-4 text-center">
-            {ensAvatar && <Image src={ensAvatar} alt="ENS Avatar" />}
+            {ensAvatar && (
+              <Image src={ensAvatar} alt="ENS Avatar" width={32} height={32} />
+            )}
             <div>
               {ensName
                 ? `${ensName} (${truncateAddress(account.address)})`

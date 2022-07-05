@@ -15,7 +15,13 @@ const Header = (): JSX.Element => {
   return (
     <>
       <header className="relative flex justify-between items-center py-4 px-6 w-full brand-gradient-horizontal">
-        <Image src="/images/paydece-logo.svg" alt="PayDece Logo" width={160} />
+        <Image
+          src="/images/paydece-logo.svg"
+          alt="PayDece Logo"
+          width={160}
+          height={40}
+          layout="intrinsic"
+        />
         <button
           type="button"
           onClick={toggleMenuVisible}
