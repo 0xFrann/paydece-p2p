@@ -107,9 +107,6 @@ const PlacesAutocomplete = forwardRef(
           },
         } = suggestion
 
-        if (suggestion.terms[suggestion.terms.length - 2].value !== 'Córdoba')
-          return
-
         // eslint-disable-next-line consistent-return
         return (
           <div
