@@ -3,14 +3,13 @@ import { randomCirclePoint } from 'random-location'
 import { useEffect, useMemo, useState } from 'react'
 import Map, { Marker, Popup } from 'react-map-gl'
 import CloseIcon from '../../assets/close-icon.svg'
-import LinkIcon from '../../assets/link-icon.svg'
+import P2PIcon from '../../assets/p2p-icon.svg'
 import PointIcon from '../../assets/point-icon.svg'
-import RadiusIcon from '../../assets/radius-mark.svg'
+import TelegramIcon from '../../assets/telegram-icon.svg'
 import WhatsAppIcon from '../../assets/whatsapp-icon.svg'
 import { MAPBOX_GL_TOKEN } from '../../constants'
 import { TLocation, TPoint } from '../../types'
 import {
-  LinkIconStyle,
   LinksStyle,
   MarkerStyle,
   PointStyle,
@@ -19,7 +18,6 @@ import {
   PopupSubTitleStyle,
   PopupTitleStyle,
   UserPointStyle,
-  WhatsAppIconStyle,
 } from './styles'
 
 interface IMapProps {
@@ -103,7 +101,8 @@ const MapComponent = ({
       }}
       {...(selectedPoint && {
         longitude: selectedPoint?.location.latLng.lng,
-        latitude: selectedPoint?.location.latLng.lat,
+        latitude:
+          Number(selectedPoint?.location.latLng.lat) + 0.000002 * 2 ** 12,
       })}
     >
       <>
@@ -120,7 +119,7 @@ const MapComponent = ({
                 }}
               >
                 <div className={MarkerStyle}>
-                  <RadiusIcon
+                  <P2PIcon
                     width={Math.round(0.01 * 2 ** currentZoom)}
                     height={Math.round(0.01 * 2 ** currentZoom)}
                     className={`${PointStyle} ${
@@ -154,32 +153,38 @@ const MapComponent = ({
               className={PopupCloseIconStyle}
             />
             <span className={PopupTitleStyle}>{selectedPoint?.name}</span>
-            <span className={PopupSubTitleStyle}>F2F</span>
+            <span className={PopupSubTitleStyle}>
+              {selectedPoint?.description}
+            </span>
+            <span className="block">{selectedPoint?.coins.join(', ')}</span>
+            <span className="block">
+              Fiat: {selectedPoint?.fiat.join(', ')}
+            </span>
+            <span className="block">
+              Métodos de pago: {selectedPoint?.paymentMethods.join(', ')}
+            </span>
+            <span className="block">Min: ${selectedPoint?.exchangeMin}</span>
+            <span className="block">Max: ${selectedPoint?.exchangeMax}</span>
+            <span className="block">
+              Envios: {selectedPoint?.shipping ? 'Si' : 'No'}
+            </span>
             <span className={LinksStyle}>
-              {selectedPoint?.contact?.whatsapp && (
+              {selectedPoint?.whatsappNumber && (
                 <a
-                  href={`https://wa.me/54${selectedPoint.contact.whatsapp}`}
+                  href={`https://wa.me/54${selectedPoint.whatsappNumber}`}
                   target="_blank"
                   rel="noreferrer"
                 >
-                  <WhatsAppIcon
-                    width={16}
-                    height={16}
-                    className={WhatsAppIconStyle}
-                  />
+                  <WhatsAppIcon width={24} height={24} />
                 </a>
               )}
-              {selectedPoint?.contact?.link && (
+              {selectedPoint?.telegramUser && (
                 <a
-                  href={
-                    selectedPoint.contact.link.startsWith('http')
-                      ? selectedPoint.contact.link
-                      : `//${selectedPoint.contact.link}`
-                  }
+                  href={`https://t.me/${selectedPoint.telegramUser}`}
                   target="_blank"
                   rel="noreferrer"
                 >
-                  <LinkIcon width={20} height={20} className={LinkIconStyle} />
+                  <TelegramIcon width={24} height={24} />
                 </a>
               )}
             </span>

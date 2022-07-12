@@ -5577,6 +5577,11 @@ react-map-gl@^7.0.15:
   dependencies:
     "@types/mapbox-gl" "^2.6.0"
 
+react-multi-select-component@^4.2.9:
+  version "4.2.9"
+  resolved "https://registry.yarnpkg.com/react-multi-select-component/-/react-multi-select-component-4.2.9.tgz#e0e750bcd243f4e4d829a9b0d983bbc457fd90fe"
+  integrity sha512-ef++2OuhBhAQ6MMfwl5BvI9Jtq8wcnCTM3MHvcKKdv5OGoUtIZpj5PGqLmegwSi75ZhkJTp/AdE8MR0nv2zGxQ==
+
 react-query@^4.0.0-beta.19:
   version "4.0.0-beta.19"
   resolved "https://registry.yarnpkg.com/react-query/-/react-query-4.0.0-beta.19.tgz#21ad1f6fca09ccbf42f726153108f83a39447986"

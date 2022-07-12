@@ -1,27 +1,28 @@
 import { useEffect, useState } from 'react'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { Controller, SubmitHandler, useForm } from 'react-hook-form'
+import { MultiSelect } from 'react-multi-select-component'
 import { useAccount } from 'wagmi'
 import Header from '../../components/Header/Header'
 import PlacesAutocomplete from '../../components/PlacesAutocomplete'
 import WalletConnect from '../../components/WalletConnect/WalletConnect'
 import { useAddPointMutation } from '../../services/points'
-import { TLocation } from '../../types'
+import {
+  ECoins,
+  EFiat,
+  EPaymentMethod,
+  TLocation,
+  TPointFormValues,
+} from '../../types'
 
 const TitleSyle = 'text-4xl text-center font-bold text-[color:var(--primary)]'
 const FormStyle = 'flex flex-col text-center w-full mt-6'
 const InputStyle =
   'm-2 py-2 px-4 h-12 rounded-3xl outline-none focus:shadow-md border border-[color:var(--primary)]'
+const CheckboxStyle =
+  'm-2 py-2 px-4 h-3 rounded-3xl outline-none focus:shadow-md border border-[color:var(--primary)]'
 const ButtonStyle =
   'm-2 h-12 px-6 rounded-full focus:outline-none bg-[color:var(--primary)] text-white border border-[color:var(--primary)]'
 const ErrorStyle = 'ring-red-500 ring-2'
-
-type TPointFormValues = {
-  name: string
-  address: string
-  category: string
-  whatsapp: string
-  link: string
-}
 
 const NewPointPage = (): JSX.Element => {
   const [addPoint, { isLoading: isAdding, isSuccess }] = useAddPointMutation()
@@ -44,23 +45,46 @@ const NewPointPage = (): JSX.Element => {
     }
   }, [account?.address])
 
+  const setDefaultValues = (): TPointFormValues => {
+    return {
+      name: '',
+      address: '',
+      whatsappNumber: null,
+      telegramUser: '',
+      description: '',
+      coins: [],
+      fiat: [],
+      exchangeMin: null,
+      exchangeMax: null,
+      shipping: false,
+      paymentMethods: [],
+    }
+  }
+
   const {
     register,
+    control,
     handleSubmit,
     reset: resetForm,
     formState: { errors },
-  } = useForm()
+  } = useForm({
+    defaultValues: setDefaultValues(),
+  })
 
   const onSubmit: SubmitHandler<TPointFormValues> = (data) => {
-    const whatsappNumber = String(data.whatsapp || '').replace(/\D+/g, '')
     addPoint({
       name: data.name,
       owner: account.address,
       location: { ...location },
-      contact: {
-        whatsapp: Number(whatsappNumber) || null,
-        link: data.link,
-      },
+      whatsappNumber: data.whatsappNumber,
+      telegramUser: data.telegramUser?.replace('@', ''),
+      description: data.description,
+      coins: data.coins,
+      fiat: data.fiat,
+      exchangeMin: data.exchangeMin,
+      exchangeMax: data.exchangeMax,
+      shipping: data.shipping,
+      paymentMethods: data.paymentMethods,
     })
   }
 
@@ -100,9 +124,17 @@ const NewPointPage = (): JSX.Element => {
           <form className={FormStyle} onSubmit={handleSubmit(onSubmit)}>
             <input
               className={`${InputStyle} ${errors.name ? ErrorStyle : ''}`}
-              placeholder="Nombre del negocio"
+              placeholder="Nombre"
               autoComplete="off"
-              {...register('name', { required: true })}
+              {...register('name', { required: true, maxLength: 16 })}
+            />
+            <textarea
+              className={`${InputStyle} ${
+                errors.description ? ErrorStyle : ''
+              }`}
+              placeholder="Descripción"
+              autoComplete="off"
+              {...register('description', { required: false, maxLength: 60 })}
             />
             <PlacesAutocomplete
               onSelect={selectLocation}
@@ -110,22 +142,170 @@ const NewPointPage = (): JSX.Element => {
               {...register('address', { required: true })}
             />
             <input
-              className={`${InputStyle} ${errors.whatsapp ? ErrorStyle : ''}`}
-              placeholder="WhatsApp: 351 123 123"
+              className={`${InputStyle} ${
+                errors.whatsappNumber ? ErrorStyle : ''
+              }`}
+              placeholder="WhatsApp: 123 123 1234"
               type="number"
               autoComplete="off"
-              {...register('whatsapp', {
+              {...register('whatsappNumber', {
                 required: false,
                 pattern: /^\d{10}$/,
               })}
             />
             <input
-              className={`${InputStyle} ${errors.link ? ErrorStyle : ''}`}
-              placeholder="Link de web o red social"
+              className={`${InputStyle} ${
+                errors.telegramUser ? ErrorStyle : ''
+              }`}
+              placeholder="Telegram: @usuario"
               autoComplete="off"
-              {...register('link', {
+              {...register('telegramUser', {
                 required: false,
               })}
+            />
+            <Controller
+              control={control}
+              name="coins"
+              render={({ field: { onChange, value } }) => (
+                <MultiSelect
+                  options={[
+                    ...Object.keys(ECoins).map(
+                      (coin): { value: string; label: string } => {
+                        return {
+                          label: coin,
+                          value: coin,
+                        }
+                      }
+                    ),
+                  ]}
+                  value={[
+                    ...value.map((coin): { value: string; label: string } => {
+                      return {
+                        label: coin,
+                        value: coin,
+                      }
+                    }),
+                  ]}
+                  onChange={(newVal) => onChange(newVal?.map((v) => v.value))}
+                  labelledBy="coins"
+                  overrideStrings={{
+                    allItemsAreSelected: 'Todas',
+                    clearSelected: 'Borrar selección',
+                    selectAll: 'Seleccionar todas',
+                    selectSomeItems: 'Cryptos',
+                  }}
+                  disableSearch
+                  className="multiselect"
+                />
+              )}
+            />
+            <Controller
+              control={control}
+              name="fiat"
+              render={({ field: { onChange, value } }) => (
+                <MultiSelect
+                  options={[
+                    ...Object.keys(EFiat).map(
+                      (coin): { value: string; label: string } => {
+                        return {
+                          label: coin,
+                          value: coin,
+                        }
+                      }
+                    ),
+                  ]}
+                  value={[
+                    ...value.map((coin): { value: string; label: string } => {
+                      return {
+                        label: coin,
+                        value: coin,
+                      }
+                    }),
+                  ]}
+                  onChange={(newVal) => onChange(newVal?.map((v) => v.value))}
+                  labelledBy="fiat"
+                  overrideStrings={{
+                    allItemsAreSelected: 'Todas',
+                    clearSelected: 'Borrar selección',
+                    selectAll: 'Seleccionar todas',
+                    selectSomeItems: 'Monedas',
+                  }}
+                  disableSearch
+                  className="multiselect"
+                />
+              )}
+            />
+            <input
+              className={`${InputStyle} ${
+                errors.exchangeMin ? ErrorStyle : ''
+              }`}
+              placeholder="Min: $USD"
+              type="number"
+              autoComplete="off"
+              {...register('exchangeMin', {
+                required: false,
+              })}
+            />
+            <input
+              className={`${InputStyle} ${
+                errors.exchangeMax ? ErrorStyle : ''
+              }`}
+              placeholder="Max: $USD"
+              type="number"
+              autoComplete="off"
+              {...register('exchangeMax', {
+                required: false,
+              })}
+            />
+            <div className="flex">
+              <input
+                className={`${CheckboxStyle} ${
+                  errors.shipping ? ErrorStyle : ''
+                }`}
+                placeholder="Envios"
+                type="checkbox"
+                autoComplete="off"
+                {...register('shipping', {
+                  required: false,
+                })}
+              />
+              <span>Realizo envíos</span>
+            </div>
+            <Controller
+              control={control}
+              name="paymentMethods"
+              render={({ field: { onChange, value } }) => (
+                <MultiSelect
+                  options={[
+                    ...Object.keys(EPaymentMethod).map(
+                      (coin): { value: string; label: string } => {
+                        return {
+                          label: coin,
+                          value: coin,
+                        }
+                      }
+                    ),
+                  ]}
+                  value={[
+                    ...value.map((coin): { value: string; label: string } => {
+                      return {
+                        label: coin,
+                        value: coin,
+                      }
+                    }),
+                  ]}
+                  onChange={(newVal) => onChange(newVal?.map((v) => v.value))}
+                  labelledBy="paymentMethods"
+                  overrideStrings={{
+                    allItemsAreSelected: 'Todos',
+                    clearSelected: 'Borrar selección',
+                    selectAll: 'Seleccionar todos',
+                    selectSomeItems: 'Métodos de pago',
+                  }}
+                  disableSearch
+                  className="multiselect"
+                />
+              )}
             />
             <button className={ButtonStyle} type="submit">
               Agregar Point
